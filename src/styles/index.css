@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-background: #ffffff;
+  --muted-foreground: #6b7280;
+}
+
+@layer utilities {
+  .bg-background {
+    background-color: var(--color-background);
+  }
+}
+
+/* helper alias used in App.tsx */
+.text-muted-foreground {
+  color: var(--muted-foreground);
+}
