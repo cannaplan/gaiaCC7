@@ -1,4 +1,4 @@
-name: CI/CD
+name: CI
 
 on:
   push:
@@ -8,10 +8,9 @@ on:
 
 permissions:
   contents: read
-  id-token: write
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -25,35 +24,5 @@ jobs:
     - run: npm run build
     - run: npm run lint
     - run: npm test
-    - uses: actions/upload-artifact@v4
-      with:
-        name: build
-        path: dist/
-
-  deploy:
-    needs: build
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: 'read'
-      id-token: 'write'
-    steps:
-    - uses: actions/checkout@v4
-    - name: Download build
-      uses: actions/download-artifact@v4
-      with:
-        name: build
-        path: dist/
-    - name: Deploy to server
-      id: deploy
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.PROD_HOST }}
-        username: ${{ secrets.PROD_USER }}
-        key: ${{ secrets.PROD_SSH_KEY }}
-        script: |
-          cd /var/www/gaiaCC7
-          git pull origin main
-          docker compose down
-          docker compose up -d --build
-          docker system prune -f
+    - name: Upload dist
+      uses
